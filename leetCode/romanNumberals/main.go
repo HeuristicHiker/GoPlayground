@@ -1,10 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-)
-
 /* I've got my key value pair
 What about IV
 	need to know if I have to subtract
@@ -69,6 +64,36 @@ type numInt struct {
 }
 
 func intToRomanNumeral(i int) string {
+	soln := ""
+	k := 0
+	numerals := []string{"I", "V", "X", "L", "C", "D", "M"}
+
+	for i > 0 {
+		d := i % 10
+		v := ""
+		if d < 4 {
+			for j := 0; j < d; j++ {
+				v += numerals[k]
+			}
+		} else if d == 4 {
+			v += numerals[k] + numerals[k+1]
+		} else if d < 9 {
+			v += numerals[k+1]
+			for j := 0; j < d-5; j++ {
+				v += numerals[k]
+			}
+		} else if d == 9 {
+			v += numerals[k] + numerals[k+2]
+		}
+		soln = v + soln
+		k += 2
+		i /= 10
+	}
+
+	return soln
+}
+
+func intToRomanNumeralsNotWorking(i int) string {
 	numInts := []numInt{
 		{1000, "M"},
 		{500, "D"},
@@ -79,67 +104,49 @@ func intToRomanNumeral(i int) string {
 		{1, "I"},
 	}
 
-	asString := ""
+	soln := ""
 
-	/*
-		imaginary loop
-
-		element = 9
-		Find 5V
-		Try to add smal num
-		At 3 tries, stop
-			Add back
-			Try large num
-		See if we good
-
-	*/
-
-	for index, irn := range numInts[:6] {
+	for idx, irn := range numInts {
 		if i == 0 {
 			break
 		}
-		if i == irn.value {
-			asString += irn.numeral
-			return asString
-		}
-		if i > irn.value {
-			// give it a shot
-			temp := asString
-			for strikes := 3; strikes >= 0; strikes-- {
-				if strikes == 3 {
-					asString += irn.numeral
-					i -= irn.value
-				}
-				if strikes == 0 {
-					// need to sub
-					i = -numInts[index-1].value
-					asString = numInts[index+1].numeral + temp
-				}
-				lowerNum := numInts[index+1]
-				additionalValue := strikes * lowerNum.value
-				fmt.Println("strikes: ", strikes, " * ", lowerNum.value, " = ", additionalValue)
 
-				if additionalValue == i {
-					fmt.Println("i ", i, " = ", additionalValue)
-					asString = asString + strings.Repeat(lowerNum.numeral, strikes)
-					i -= strikes
-					break
-				}
-				// if i+lowerNum.value < i {
-				// 	i += lowerNum.value
-				// 	asString += lowerNum.numeral
-				// } else {
-				// 	break
-				// }
+		if idx < len(numInts)-1 {
+			next := numInts[idx+1]
+
+			if i >= irn.value-next.value && i < irn.value && (irn.value-next.value) != next.value {
+				soln += next.numeral + irn.numeral
+				i -= irn.value - next.value
+				continue
 			}
-			if i < 0 {
-				asString += numInts[index-1].numeral
+		}
+
+		for i >= irn.value {
+			var lastNum numInt
+			if idx > 0 {
+				lastNum = numInts[idx-1]
+			} else {
+				lastNum = numInt{0, ""}
 			}
-			// asString = numInts[index+1].numeral + asString
+			var nextNum numInt
+			if idx < len(numInts)-1 {
+				nextNum = numInts[idx+1]
+			} else {
+				nextNum = numInt{0, ""}
+			}
+			// fmt.Println(" irn ", irn.numeral, " lastVal: ", lastNum.numeral, "i is ", i, soln, " next: ", nextNum.numeral)
+			if i == lastNum.value-nextNum.value {
+				soln = soln + nextNum.numeral + lastNum.numeral
+				i = 0
+			} else {
+				soln += irn.numeral
+				i -= irn.value
+			}
+			// fmt.Println("--- soln: ", soln, " i: ", i)
 		}
 	}
 
-	return asString
+	return soln
 }
 
 func digitToNumeral(i int) string {

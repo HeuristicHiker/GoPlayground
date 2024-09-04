@@ -13,9 +13,9 @@ func TestEight(t *testing.T) {
 
 func TestNine(t *testing.T) {
 	result := intToRomanNumeral(9)
-	correct := "IX"
-	if result != correct {
-		t.Errorf("Expect %v but got %v", correct, result)
+	answer := "IX"
+	if result != answer {
+		t.Errorf("Expect %v but got %v", answer, result)
 	}
 }
 
@@ -23,5 +23,19 @@ func TestForty(t *testing.T) {
 	result := intToRomanNumeral(40)
 	if result != "XL" {
 		t.Errorf("Expect %v but got %v", "XL", result)
+	}
+}
+func TestYear(t *testing.T) {
+	result := intToRomanNumeral(3749)
+	answer := "MMMDCCXLIX"
+	if result != answer {
+		t.Errorf("Expect %v but got %v", answer, result)
+	}
+}
+func Test1994(t *testing.T) {
+	result := intToRomanNumeral(1994)
+	answer := "MCMXCIV"
+	if result != answer {
+		t.Errorf("Expect %v but got %v", answer, result)
 	}
 }
