@@ -67,5 +67,22 @@ moves only contains the characters 'U', 'D', 'L' and 'R'.
 */
 
 func judgeCircle(moves string) bool {
-	return false
+	vDiff := 0
+	hDiff := 0
+
+	for _, s := range moves {
+		fmt.Println(s)
+		switch s {
+		case 'U':
+			vDiff++
+		case 'D':
+			vDiff--
+		case 'L':
+			hDiff--
+		case 'R':
+			hDiff++
+		}
+	}
+
+	return hDiff == 0 && vDiff == 0
 }

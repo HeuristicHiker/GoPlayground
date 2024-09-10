@@ -14,3 +14,12 @@ func TestCalcPoints(t *testing.T) {
 	}
 
 }
+
+func TestJudgeCircle(t *testing.T) {
+	result := true
+	soln := judgeCircle("UD")
+
+	if result != soln {
+		t.Errorf("Expected %v but got %v", soln, result)
+	}
+}
